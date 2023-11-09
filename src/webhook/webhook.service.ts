@@ -18,9 +18,11 @@ export class WebhookService {
     let dpFe = this.configService.get<string>('DPFE');
     let dpBe = this.configService.get<string>('DPBE');
     let tgolshop = this.configService.get<string>('TGOLSHOP');
+    let genSql = this.configService.get<string>('GENSQL');
     let dpFeDir = this.configService.get<string>('DPFE_DIR');
     let dpBeDir = this.configService.get<string>('DPBE_DIR');
     let tgolshopDir = this.configService.get<string>('TGOLSHOP_DIR');
+    let genSqlDir = this.configService.get<string>('GENSQL_DIR');
     console.log(data.push_data);
 
     if (!tagName) {
@@ -64,16 +66,13 @@ export class WebhookService {
           await runCommand(`docker run --rm --env-file ${tgolshopDir} -d -p 3004:3000 --name ${name} ${repoName}:${tagName}`);
           console.log(`Started container with image: ${repoName}:${tagName}`);
           break;
+        case genSql:
+          await runCommand(`docker run --rm --env-file ${genSqlDir} -d -p 3005:3000 --name ${name} ${repoName}:${tagName}`);
+          console.log(`Started container with image: ${repoName}:${tagName}`);
+          break;  
         default:
           console.log('This image is not supported');
       }
-      // if(repoName === dpFe) {
-      //   await runCommand(`docker run --rm --env-file ${dpFeDir} -d -p 3001:3000 --name ${name} ${repoName}:${tagName}`);
-      //   console.log(`Started container with image: ${repoName}:${tagName}`);
-      // } else if(repoName === dpBe) {
-      //   await runCommand(`docker run --rm --env-file ${dpBeDir} -d -p 3002:3000 --name ${name} ${repoName}:${tagName}`);
-      //   console.log(`Started container with image: ${repoName}:${tagName}`);
-      // }
       
     } catch (error) {
       console.error(`Error starting container with image: ${repoName}:${tagName}`, error);
