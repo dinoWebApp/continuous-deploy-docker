@@ -19,10 +19,12 @@ export class WebhookService {
     let dpBe = this.configService.get<string>('DPBE');
     let tgolshop = this.configService.get<string>('TGOLSHOP');
     let genSql = this.configService.get<string>('GENSQL');
+    let sns = this.configService.get<string>('SNS');
     let dpFeDir = this.configService.get<string>('DPFE_DIR');
     let dpBeDir = this.configService.get<string>('DPBE_DIR');
     let tgolshopDir = this.configService.get<string>('TGOLSHOP_DIR');
     let genSqlDir = this.configService.get<string>('GENSQL_DIR');
+    let snsDir = this.configService.get<string>('SNS_DIR');
     console.log(data.push_data);
 
     if (!tagName) {
@@ -68,6 +70,10 @@ export class WebhookService {
           break;
         case genSql:
           await runCommand(`docker run --rm --env-file ${genSqlDir} -d -p 3005:3000 --name ${name} ${repoName}:${tagName}`);
+          console.log(`Started container with image: ${repoName}:${tagName}`);
+          break;  
+        case sns:
+          await runCommand(`docker run --rm --env-file ${snsDir} -d -p 3006:3000 --name ${name} ${repoName}:${tagName}`);
           console.log(`Started container with image: ${repoName}:${tagName}`);
           break;  
         default:
